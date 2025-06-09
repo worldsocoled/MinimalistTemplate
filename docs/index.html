@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #4a4a4a;
+            --accent: #e6b89c;
+            --light: #f9f9f9;
+            --transition: all 0.3s ease;
+            --spacing-sm: 1rem;
+            --spacing-md: 3rem;
+            --spacing-lg: 6rem;
+            --border-radius: 4px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--primary);
+            background-color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--light);
+        }
+
+        .btn:hover:before {
+            left: 0;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav li {
+            margin-left: 2rem;
+        }
+
+        nav a {
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        nav a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        }
+
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+            padding-top: 4rem;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.2s;
+        }
+
+        .hero p {
+            margin-bottom: 2.5rem;
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.4s;
+        }
+
+        .hero .btn {
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.6s;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: -10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            height: 70%;
+            background-color: var(--accent);
+            opacity: 0.8;
+            z-index: 1;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: float 8s ease-in-out infinite;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Services */
+        .services {
+            padding: var(--spacing-lg) 0;
+            background-color: #fff;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            padding: 2rem;
+            transition: var(--transition);
+            border-radius: var(--border-radius);
+            background: var(--light);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Portfolio */
+        .portfolio {
+            padding: var(--spacing-lg) 0;
+            background-color: var(--light);
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .portfolio-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .portfolio-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(0);
+            transition: var(--transition);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-item:hover .portfolio-img {
+            transform: scale(1.05);
+        }
+
+        /* About */
+        .about {
+            padding: var(--spacing-lg) 0;
+            background-color: #fff;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            height: 500px;
+            background-color: var(--accent);
+            border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+            animation: float 10s ease-in-out infinite;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: var(--spacing-lg) 0;
+            background-color: var(--light);
+            text-align: center;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            padding: 2rem;
+        }
+
+        .quote {
+            font-size: 1.4rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .quote:before, .quote:after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .quote:before {
+            top: -20px;
+            left: -30px;
+        }
+
+        .quote:after {
+            bottom: -40px;
+            right: -30px;
+        }
+
+        .client {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .client-role {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Contact */
+        .contact {
+            padding: var(--spacing-lg) 0;
+            background-color: #fff;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-right: 1rem;
+            min-width: 30px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 0 2rem;
+            background-color: var(--primary);
+            color: #fff;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #555;
+            border-radius: 50%;
+            color: #fff;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+                transform: translateY(0) translateX(0);
+            }
+            33% {
+                border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+                transform: translateY(-20px) translateX(10px);
+            }
+            66% {
+                border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+                transform: translateY(10px) translateX(-10px);
+            }
+            100% {
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .about-image {
+                height: 400px;
+                order: -1;
+            }
+
+            .hero-image {
+                width: 60%;
+                right: -20%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            nav ul {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: #fff;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 1001;
+            }
+
+            nav ul.active {
+                right: 0;
+            }
+
+            nav li {
+                margin: 1.5rem 0;
+            }
+
+            .hero-image {
+                display: none;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            :root {
+                --spacing-md: 2rem;
+                --spacing-lg: 4rem;
+            }
+
+            .portfolio-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">Minimal<span>.</span></a>
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Elegant Design & Minimal Aesthetic</h1>
+                <p>Creating meaningful experiences through thoughtful design and intentional simplicity.</p>
+                <a href="#portfolio" class="btn">View Work</a>
+            </div>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+
+    <!-- Services -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-pencil-ruler"></i>
+                    </div>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating intuitive interfaces with exceptional user experiences that delight and engage your audience.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Building responsive, performant websites with clean code and modern technologies.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>App Design</h3>
+                    <p>Designing mobile applications that are both beautiful and functional across all devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="portfolio-header">
+                <h2>Featured Projects</h2>
+                <a href="#" class="btn">View All</a>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-img" style="background: linear-gradient(135deg, #e6b89c 0%, #e8d3c5 100%);"></div>
+                    <div class="portfolio-info">
+                        <h3>Brand Identity</h3>
+                        <p>Complete visual identity for a modern tech startup</p>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Brand Identity</h3>
+                        <p>Complete visual identity for a modern tech startup</p>
+                        <a href="#" class="btn" style="margin-top: 1rem; color: white; border-color: white;">View Details</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-img" style="background: linear-gradient(135deg, #9cb0e6 0%, #c5d1e8 100%);"></div>
+                    <div class="portfolio-info">
+                        <h3>E-commerce Website</h3>
+                        <p>Streamlined shopping experience with intuitive navigation</p>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>E-commerce Website</h3>
+                        <p>Streamlined shopping experience with intuitive navigation</p>
+                        <a href="#" class="btn" style="margin-top: 1rem; color: white; border-color: white;">View Details</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-img" style="background: linear-gradient(135deg, #b8e6b8 0%, #d8eed8 100%);"></div>
+                    <div class="portfolio-info">
+                        <h3>Mobile App UI</h3>
+                        <p>Fitness tracking application with clean dashboard</p>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Mobile App UI</h3>
+                        <p>Fitness tracking application with clean dashboard</p>
+                        <a href="#" class="btn" style="margin-top: 1rem; color: white; border-color: white;">View Details</a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-img" style="background: linear-gradient(135deg, #e6c1e0 0%, #f0d9ed 100%);"></div>
+                    <div class="portfolio-info">
+                        <h3>Corporate Website</h3>
+                        <p>Minimal design for a financial consulting firm</p>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Corporate Website</h3>
+                        <p>Minimal design for a financial consulting firm</p>
+                        <a href="#" class="btn" style="margin-top: 1rem; color: white; border-color: white;">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <div class="about-grid">
+                <div class="about-content">
+                    <p>We are a small design studio focused on creating meaningful digital experiences. Our approach combines minimal aesthetics with functional design to deliver solutions that resonate with users.</p>
+                    <p>Founded in 2020, we've worked with startups, established businesses, and non-profits to create digital products that stand the test of time.</p>
+                    <p>Our philosophy is simple: remove the unnecessary so the necessary may speak. We believe in design that serves a purpose and enhances the human experience.</p>
+                    <a href="#contact" class="btn" style="margin-top: 2rem;">Get in Touch</a>
+                </div>
+                <div class="about-image"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>Client Testimonials</h2>
+            <div class="testimonial-container">
+                <div class="testimonial">
+                    <p class="quote">Working with Minimal Studio transformed our digital presence. Their attention to detail and minimalist approach perfectly captured our brand's essence.</p>
+                    <p class="client">Sarah Johnson</p>
+                    <p class="client-role">CEO, NovaTech</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p>123 Design Street, Creative City, CC 10001</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Phone</h3>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p>hello@minimalstudio.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Minimal<span>.</span></h3>
+                    <p>Creating meaningful digital experiences through minimal design and thoughtful interactions.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-dribbble"></i></a>
+                        <a href="#"><i class="fab fa-behance"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Explore</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">UI/UX Design</a></li>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">App Design</a></li>
+                        <li><a href="#">Brand Identity</a></li>
+                        <li><a href="#">Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to receive updates and design insights.</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" style="width: 100%; padding: 0.8rem; margin-top: 1rem;">
+                        </div>
+                        <button type="submit" class="btn" style="margin-top: 1rem; width: 100%; background: transparent; color: #fff; border-color: #fff;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Minimal Studio Template. By: WorldSoColed Web Artistry - All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileToggle.innerHTML = navMenu.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                navMenu.classList.remove('active');
+                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Simple testimonial carousel
+        const testimonials = [
+            {
+                quote: "Working with Minimal Studio transformed our digital presence. Their attention to detail and minimalist approach perfectly captured our brand's essence.",
+                client: "Sarah Johnson",
+                role: "CEO, NovaTech"
+            },
+            {
+                quote: "The website they designed for us exceeded all expectations. It's clean, functional, and truly represents who we are as a company.",
+                client: "Michael Chen",
+                role: "Marketing Director, Bloom Inc."
+            },
+            {
+                quote: "Minimal Studio's ability to simplify complex ideas into beautiful interfaces is unmatched. They're our go-to design partner.",
+                client: "Elena Rodriguez",
+                role: "Product Manager, TechVision"
+            }
+        ];
+
+        let currentTestimonial = 0;
+        const testimonialEl = document.querySelector('.testimonial');
+        
+        function rotateTestimonial() {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            const testimonial = testimonials[currentTestimonial];
+            
+            testimonialEl.innerHTML = `
+                <p class="quote">${testimonial.quote}</p>
+                <p class="client">${testimonial.client}</p>
+                <p class="client-role">${testimonial.role}</p>
+            `;
+        }
+        
+        setInterval(rotateTestimonial, 5000);
+    </script>
+</body>
+</html>
